@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool cando(int a,int b,int c,int T[9][9]){
+    for (int j = 0; j < 9;j++){
+        if(b != j && c == T[a][j])return 0;
+    }
+    for (int j = 0; j < 9;j++){
+        if(a != j && c == T[j][b])return 0;
+    }
+    int x = a - a % 3;
+    int y = b - b % 3;
+    for (int i = x; i <= x + 2;i++){
+        for(int j = y; j <= y + 2;j++){
+            if((i != a || j != b) && T[i][j] == c)return 0;
+        }
+    }
+    return 1;
+}
+
+bool backtrack(int grid[9][9],int rzad,int kol){
+    if(rzad == 8 && kol == 9){
+        for (int i = 0; i < 9;i++){
+            for (int j = 0; j < 9;j++){
+                cout << grid[i][j];
+            }
+            cout << '\n';
+        }
+        return 1;
+    }
+    if(kol == 9){
+        kol = 0;
+        rzad++;
+    }
+    if(grid[rzad][kol] != 0)return backtrack(grid,rzad,kol+1);
+    for (int i = 1; i <= 9;i++){
+        if(cando(rzad,kol,i,grid)){
+            grid[rzad][kol] = i;
+            if(backtrack(grid,rzad,kol+1)){
+                return 1;
+            }
+            grid[rzad][kol] = 0;
+        }
+    }
+    return 0;
+}
+
+int main(){
+    int T[9][9];
+    for (int z = 0; z < 50;z++){
+        string trash1,trash2;
+        cin >> trash1 >> trash2;
+        for (int i = 0; i < 9;i++){
+            for (int j = 0; j < 9;j++){
+                char c;
+                cin >> c;
+                T[i][j] = (int)c - '0';
+            }
+        }  
+        backtrack(T,0,0);
+    }
+}
